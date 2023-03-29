@@ -1,0 +1,34 @@
+{
+  "data": [
+    {
+      "resource": "VM-1",
+      "type": "D-Family",
+      "averageCpuUsagePercentage": 25,
+      "averageMemoryUsagePercentage": 50,
+      "costPerMonth": 1000,
+      "currency": "USD",
+      "suggestedScheme": "Scheme-2",
+      "isAutoOptimized": false
+    },
+    {
+      "resource": "VM-3",
+      "type": "D-Family",
+      "averageCpuUsagePercentage": 25,
+      "averageMemoryUsagePercentage": 50,
+      "costPerMonth": 1000,
+      "currency": "INR",
+      "suggestedScheme": "Scheme-12",
+      "isAutoOptimized": false
+    },
+    {
+      "resource": "VM-3",
+      "type": "D-Family",
+      "averageCpuUsagePercentage": 25,
+      "averageMemoryUsagePercentage": 50,
+      "costPerMonth": 1000,
+      "currency": "USD",
+      "suggestedScheme": "Scheme-24",
+      "isAutoOptimized": false
+    }
+  ]
+}

@@ -1,6 +1,7 @@
 {
   "data": [
     {
+      "id": 1,
       "resource": "VM-1",
       "type": "D-Family",
       "averageCpuUsagePercentage": 25,
@@ -11,6 +12,7 @@
       "isAutoOptimized": false
     },
     {
+      "id": 2,
       "resource": "VM-3",
       "type": "D-Family",
       "averageCpuUsagePercentage": 25,
@@ -21,6 +23,7 @@
       "isAutoOptimized": false
     },
     {
+      "id": 3,
       "resource": "VM-3",
       "type": "D-Family",
       "averageCpuUsagePercentage": 25,

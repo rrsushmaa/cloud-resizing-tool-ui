@@ -13,7 +13,7 @@
     },
     {
       "id": 2,
-      "resource": "VM-3",
+      "resource": "VM-2",
       "type": "D-Family",
       "averageCpuUsagePercentage": 25,
       "averageMemoryUsagePercentage": 50,

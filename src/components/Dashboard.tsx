@@ -9,7 +9,7 @@ import {
     Button,
     CssBaseline,
     Divider,
-    Drawer,
+    Drawer, Grid,
     IconButton,
     List,
     ListItem, ListItemButton, ListItemText,
@@ -137,10 +137,12 @@ export const Dashboard: FC = (props: Props) => {
                     {drawer}
                 </Drawer>
             </Box>
-            <Box component="main" sx={{p: 3}}>
-                <Toolbar/>
-                <Box style={{height: 300, width: '100%'}}>
-                    <DataGrid rows={rows} columns={columns}/>
+            <Box component="main" sx={{p: 3, width: '100%', marginTop: '74px'}}>
+                <Box sx={{display: 'flex', justifyContent: 'center'}}>
+                    <Box sx={{display: 'flex', flexDirection: 'column'}}>
+                        <Box><Typography>Resources</Typography></Box>
+                        <DataGrid rows={rows} columns={columns} autoHeight sx={{width: '1100px', flexGrow: 0}}/>
+                    </Box>
                 </Box>
             </Box>
         </Box>

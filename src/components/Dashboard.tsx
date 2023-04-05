@@ -175,7 +175,7 @@ export const Dashboard: FC = () => {
       },
       {
         title: "Possible Savings %",
-        value: `${Math.round(data?.saving_percent)} %`,
+        value: `${Math.round(data?.saving_percent * 100)} %`,
         optimized: true,
       },
     ];

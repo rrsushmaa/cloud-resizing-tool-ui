@@ -2,36 +2,42 @@
   "data": [
     {
       "id": 1,
-      "resource": "VM-1",
-      "type": "D-Family",
-      "averageCpuUsagePercentage": 25,
-      "averageMemoryUsagePercentage": 50,
-      "costPerMonth": 1000,
-      "currency": "USD",
-      "suggestedScheme": "Scheme-2",
-      "isAutoOptimized": false
+      "name": "VM-1",
+      "vm_size": "D-Family",
+      "cpu_usage": 25,
+      "memory_usage": 50,
+      "current_cpu": "2",
+      "current_memory": "4",
+      "currency": "INR",
+      "suggested_size": "Scheme-2",
+      "current_cost_per_week": 929.52,
+      "savings_cost_per_week": 360.0
     },
     {
       "id": 2,
-      "resource": "VM-2",
-      "type": "D-Family",
-      "averageCpuUsagePercentage": 25,
-      "averageMemoryUsagePercentage": 50,
-      "costPerMonth": 1000,
+      "name": "VM-2",
+      "vm_size": "D-Family",
+      "cpu_usage": 25,
+      "memory_usage": 50,
+      "current_cpu": "2",
+      "current_memory": "4",
       "currency": "INR",
-      "suggestedScheme": "Scheme-12",
-      "isAutoOptimized": false
+      "suggested_size": "Scheme-1",
+      "current_cost_per_week": 929.52,
+      "savings_cost_per_week": 360.0
     },
     {
       "id": 3,
-      "resource": "VM-3",
-      "type": "D-Family",
-      "averageCpuUsagePercentage": 25,
-      "averageMemoryUsagePercentage": 50,
-      "costPerMonth": 1000,
-      "currency": "USD",
-      "suggestedScheme": "Scheme-24",
-      "isAutoOptimized": false
+      "name": "VM-3",
+      "vm_size": "D-Family",
+      "cpu_usage": 25,
+      "memory_usage": 50,
+      "current_cpu": "2",
+      "current_memory": "4",
+      "currency": "INR",
+      "suggested_size": "Scheme-15",
+      "current_cost_per_week": 929.52,
+      "savings_cost_per_week": 360.0
     }
   ]
 }

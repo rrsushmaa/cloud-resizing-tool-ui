@@ -9,7 +9,7 @@ import {
     Button,
     CssBaseline,
     Divider,
-    Drawer, Grid,
+    Drawer,
     IconButton,
     List,
     ListItem, ListItemButton, ListItemText,
@@ -33,12 +33,12 @@ const optimizeButton = (params: GridRenderCellParams<any, any, any, GridTreeNode
     )
 }
 const columns: GridColDef[] = [
-    {field: 'resource', headerName: 'Resource', width: 150},
-    {field: 'type', headerName: 'Type', width: 150},
-    {field: 'averageCpuUsagePercentage', headerName: 'Average CPU %', width: 150},
-    {field: 'averageMemoryUsagePercentage', headerName: 'Average memory %', width: 150},
-    {field: 'costPerMonth', headerName: 'Cost', width: 150},
-    {field: 'suggestedScheme', headerName: 'Suggestion', width: 150},
+    {field: 'name', headerName: 'Resource', width: 150},
+    {field: 'vm_size', headerName: 'VM Size', width: 150},
+    {field: 'cpu_usage', headerName: 'Average CPU %', width: 150},
+    {field: 'memory_usage', headerName: 'Average memory %', width: 150},
+    {field: 'current_cost_per_week', headerName: 'Cost Per Week', width: 150},
+    {field: 'suggested_size', headerName: 'Suggestion', width: 150},
     {
         field: 'optimize',
         headerName: 'Optimize',

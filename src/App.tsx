@@ -1,21 +1,21 @@
-import {useState} from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import {
-    QueryClient,
-    QueryClientProvider,
-} from '@tanstack/react-query'
-import './App.css'
-import {Dashboard} from "./components/Dashboard";
+import { Box, CssBaseline } from "@mui/material";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import "./App.css";
+import { Dashboard } from "./components/Dashboard";
+import { Header } from "./components/Header";
 
-const queryClient = new QueryClient()
+const queryClient = new QueryClient();
 
 function App() {
-    return (
-        <QueryClientProvider client={queryClient}>
-            <Dashboard/>
-        </QueryClientProvider>
-    )
+  return (
+    <QueryClientProvider client={queryClient}>
+      <Box sx={{ display: "flex" }}>
+        <CssBaseline />
+        <Header />
+        <Dashboard />
+      </Box>
+    </QueryClientProvider>
+  );
 }
 
-export default App
+export default App;

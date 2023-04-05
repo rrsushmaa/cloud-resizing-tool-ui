@@ -1,14 +1,27 @@
-import {apiClient} from "./api";
+import { apiClient } from "./api";
 
-export const getDashboard = async () => {
-    const response = await apiClient.get('http://20.198.88.89:8080/suggestions1');
-    // const response = await apiClient.get('/src/assets/data.json');
-    // await sleep()
-    return response.data
-}
+const token = import.meta.env.process.env.TW_CR_TOKEN;
 
-export const sleep = () => {
-    return new Promise(resolve => {
-        setTimeout(resolve, 2000)
-    })
-}
+export const getDashboardApi = async () => {
+  const response = await apiClient.get(
+    "http://20.198.88.89:8080/suggestions1",
+    {
+      headers: {
+        token,
+      },
+    }
+  );
+  return response.data;
+};
+
+export const postResizeApi = async (resourceName: string) => {
+  const response = await apiClient.post(
+    `http://20.198.88.89:8080/resize?name=${resourceName}`,
+    {
+      headers: {
+        token,
+      },
+    }
+  );
+  return response.data;
+};

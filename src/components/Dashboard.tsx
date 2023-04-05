@@ -147,35 +147,35 @@ export const Dashboard: FC = () => {
     return [
       {
         title: "Monthly cost",
-        value: `₹ ${(data?.monthly_cost)}`,
+        value: `₹ ${Math.round(data?.monthly_cost)}`,
       },
       {
         title: "Monthly cost after optimization",
-        value: `₹ ${(data?.monthly_cost_after_optimisation)}`,
+        value: `₹ ${Math.round(data?.monthly_cost_after_optimisation)}`,
         optimized: true,
       },
       {
         title: "Yearly cost",
-        value: `₹ ${(data?.yearly_cost)}`,
+        value: `₹ ${Math.round(data?.yearly_cost)}`,
       },
       {
         title: "Yearly cost after optimization",
-        value: `₹ ${(data?.yearly_cost_after_optimisation)}`,
+        value: `₹ ${Math.round(data?.yearly_cost_after_optimisation)}`,
         optimized: true,
       },
       {
         title: "Possible monthly saving",
-        value: `₹ ${(data?.monthly_saving)}`,
+        value: `₹ ${Math.round(data?.monthly_saving)}`,
         optimized: true,
       },
       {
         title: "Possible yearly saving",
-        value: `₹ ${(data?.yearly_saving)}`,
+        value: `₹ ${Math.round(data?.yearly_saving)}`,
         optimized: true,
       },
       {
         title: "Possible Savings %",
-        value: `${(data?.saving_percent)} %`,
+        value: `${Math.round(data?.saving_percent)} %`,
         optimized: true,
       },
     ];
@@ -228,7 +228,14 @@ export const Dashboard: FC = () => {
     () => [
       { field: "name", headerName: "Resource", width: 150 },
       { field: "vm_size", headerName: "VM Size", width: 150 },
-      { field: "cpu_usage", headerName: "CPU usage", width: 150 },
+      {
+        field: "cpu_usage",
+        headerName: "CPU usage",
+        width: 150,
+        valueFormatter: ({value}) => {
+          return parseFloat(value).toFixed(8)
+        },
+      },
       { field: "memory_usage", headerName: "Memory usage", width: 150 },
       {
         field: "current_cost_per_week",

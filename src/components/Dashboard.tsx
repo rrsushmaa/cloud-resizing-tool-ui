@@ -1,15 +1,22 @@
 import { FC, useCallback, useMemo, useState } from "react";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getDashboardApi, postResizeApi } from "../api/dashboard";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
-import { Box, Button, Grid, IconButton, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  CircularProgress,
+  Grid,
+  IconButton,
+  Typography,
+} from "@mui/material";
 import { Refresh } from "@mui/icons-material";
 
 export type OptimizeButtonProps = {
   onClick: VoidFunction;
   loading: boolean;
   disabled: boolean;
-  updated: boolean;
+  updated?: "triggered" | "error";
 };
 const OptimizeButton: FC<OptimizeButtonProps> = ({
   onClick,
@@ -23,7 +30,18 @@ const OptimizeButton: FC<OptimizeButtonProps> = ({
   }, [loading, disabled, updated]);
 
   if (updated) {
-    <Typography color="green">Triggered</Typography>;
+    return (
+      <Box maxWidth="150px">
+        <Typography
+          fontSize="small"
+          color="green"
+          textTransform="uppercase"
+          fontWeight="bold"
+        >
+          {updated}
+        </Typography>
+      </Box>
+    );
   }
 
   return (
@@ -41,12 +59,80 @@ const OptimizeButton: FC<OptimizeButtonProps> = ({
   );
 };
 
+export type AggregateCostItemProps = {
+  title: string;
+  value: string;
+  optimized?: boolean;
+};
+
+export const AggregateCostItem: FC<AggregateCostItemProps> = ({
+  title,
+  value,
+  optimized,
+}) => {
+  return (
+    <Grid
+      item
+      container
+      flexDirection="column"
+      sx={{
+        background: optimized ? "#4caf50" : "#f3e5f5",
+        borderRadius: "10px",
+        padding: "20px",
+        margin: "20px",
+        textAlign: "right",
+        color: optimized ? "white" : "black",
+      }}
+      gap="10px"
+      alignItems="flex-end"
+      flexBasis="15%"
+      justifyContent="space-between"
+    >
+      <Grid item>
+        <Typography fontWeight="bold">{title}</Typography>
+      </Grid>
+      <Grid item>
+        <Typography fontSize="20px">{value}</Typography>
+      </Grid>
+    </Grid>
+  );
+};
+
+export type AggregateCostsProps = {
+  costs: Array<{
+    title: string;
+    value: string;
+    optimized?: boolean;
+  }>;
+};
+
+export const AggregateCosts: FC<AggregateCostsProps> = ({ costs }) => {
+  return (
+    <Grid
+      container
+      justifyContent="flex-start"
+      sx={{ marginBottom: "50px" }}
+      flexDirection="row"
+    >
+      {costs.map((cost) => (
+        <AggregateCostItem
+          key={cost.title}
+          title={cost.title}
+          value={cost.value}
+          optimized={cost.optimized}
+        />
+      ))}
+    </Grid>
+  );
+};
+
 export const Dashboard: FC = () => {
+  const queryClient = useQueryClient();
   const [resizeLoadingState, setResizeLoadingState] = useState<
     Record<string, boolean>
   >({});
   const [resizeUpdatedState, setResizeUpdatedState] = useState<
-    Record<string, boolean>
+    Record<string, "triggered" | "error">
   >({});
 
   const { data, isLoading, refetch } = useQuery({
@@ -54,14 +140,54 @@ export const Dashboard: FC = () => {
     queryFn: getDashboardApi,
   });
 
+  const costs = useMemo(() => {
+    if (!data) {
+      return [];
+    }
+    return [
+      {
+        title: "Monthly cost",
+        value: `₹ ${(data?.monthly_cost)}`,
+      },
+      {
+        title: "Monthly cost after optimization",
+        value: `₹ ${(data?.monthly_cost_after_optimisation)}`,
+        optimized: true,
+      },
+      {
+        title: "Yearly cost",
+        value: `₹ ${(data?.yearly_cost)}`,
+      },
+      {
+        title: "Yearly cost after optimization",
+        value: `₹ ${(data?.yearly_cost_after_optimisation)}`,
+        optimized: true,
+      },
+      {
+        title: "Possible monthly saving",
+        value: `₹ ${(data?.monthly_saving)}`,
+        optimized: true,
+      },
+      {
+        title: "Possible yearly saving",
+        value: `₹ ${(data?.yearly_saving)}`,
+        optimized: true,
+      },
+      {
+        title: "Possible Savings %",
+        value: `${(data?.saving_percent)} %`,
+        optimized: true,
+      },
+    ];
+  }, [data]);
+
   const { mutate: resizeResource } = useMutation({
     mutationFn: async (resource: string) => {
       setResizeLoadingState((prevState) => ({
         ...prevState,
         [resource]: true,
       }));
-      return new Promise((resolve) => setTimeout(resolve, 5000));
-      // return postResizeApi(resource);
+      return postResizeApi(resource);
     },
     onSettled: (_, __, resource) => {
       setResizeLoadingState((prevState) => ({
@@ -73,7 +199,15 @@ export const Dashboard: FC = () => {
     onSuccess: (_, resource) => {
       setResizeUpdatedState((prevState) => ({
         ...prevState,
-        [resource]: true,
+        [resource]: "triggered",
+      }));
+      queryClient.invalidateQueries({ queryKey: ["dashboard"] });
+    },
+
+    onError: (_, resource) => {
+      setResizeUpdatedState((prevState) => ({
+        ...prevState,
+        [resource]: "error",
       }));
     },
   });
@@ -94,11 +228,16 @@ export const Dashboard: FC = () => {
     () => [
       { field: "name", headerName: "Resource", width: 150 },
       { field: "vm_size", headerName: "VM Size", width: 150 },
-      { field: "cpu_usage", headerName: "Average CPU %", width: 150 },
-      { field: "memory_usage", headerName: "Average memory %", width: 150 },
+      { field: "cpu_usage", headerName: "CPU usage", width: 150 },
+      { field: "memory_usage", headerName: "Memory usage", width: 150 },
       {
         field: "current_cost_per_week",
         headerName: "Cost Per Week",
+        width: 150,
+      },
+      {
+        field: "savings_cost_per_week",
+        headerName: "Optimized Cost",
         width: 150,
       },
       { field: "suggested_size", headerName: "Suggestion", width: 150 },
@@ -117,28 +256,47 @@ export const Dashboard: FC = () => {
         sortable: false,
       },
     ],
-    [onOptimizeButtonClick, resizeLoadingState]
+    [onOptimizeButtonClick, resizeLoadingState, resizeUpdatedState]
   );
+
+  if (isLoading) {
+    return (
+      <Box
+        component="main"
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          p: 3,
+          width: "100%",
+          marginTop: "74px",
+        }}
+      >
+        <CircularProgress size="200px" />
+      </Box>
+    );
+  }
 
   return (
     <Box component="main" sx={{ p: 3, width: "100%", marginTop: "74px" }}>
       <Grid container justifyContent="center">
-        <Grid item container flexDirection="column" maxWidth="800px">
-          <Grid item container justifyContent="space-between" alignItems="center">
+        <Grid item container flexDirection="column" maxWidth="1300px">
+          <AggregateCosts costs={costs} />
+          <Grid
+            item
+            container
+            justifyContent="space-between"
+            alignItems="center"
+            paddingX="10px"
+            color="white"
+            sx={{ backgroundColor: "#42a5f5" }}
+          >
             <Typography>Resources</Typography>
             <IconButton onClick={refresh} aria-label="refresh">
-              <Refresh />
+              <Refresh sx={{ fill: "white" }} />
             </IconButton>
           </Grid>
+          <DataGrid rows={data.suggestions} columns={columns} autoHeight />
         </Grid>
-        {!isLoading && data && (
-          <DataGrid
-            rows={data}
-            columns={columns}
-            autoHeight
-            sx={{ width: "1100px", flexGrow: 0 }}
-          />
-        )}
       </Grid>
     </Box>
   );
